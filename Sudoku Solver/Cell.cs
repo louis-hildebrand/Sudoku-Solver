@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Sudoku_Solver
 {
@@ -10,8 +9,14 @@ namespace Sudoku_Solver
 		public int Col { get; }
 		public char Block { get; }
 		public int Val { get; set; }
-		public bool Clue { get; set; }
+		public bool isClue { get; set; }
 		public List<int> Notes { get; set; }
+		private const ConsoleColor HIGHLIGHT_BACKGROUND = ConsoleColor.Cyan;
+		private const ConsoleColor NORMAL_BACKGROUND = ConsoleColor.Black;
+		private const ConsoleColor BAD_FOREGROUND = ConsoleColor.Red;
+		private const ConsoleColor CLUE_FOREGROUND = ConsoleColor.Magenta;
+		private const ConsoleColor NORMAL_FOREGROUND = ConsoleColor.White;
+		private const ConsoleColor NOTE_FOREGROUND = ConsoleColor.DarkGray;
 
 		public Cell(int row, int col, int val = 0)
 		{
@@ -20,12 +25,12 @@ namespace Sudoku_Solver
 			if (col < 1 || col > 9)
 				throw new Exception("Cell row number must be between 1 and 9 (inclusive)");
 			if (val < 0 || val > 9)
-				throw new Exception("Cell value must be between 1 and 9 (inclusive)");
+				throw new Exception("Cell value must be between 0 and 9 (inclusive)");
 
 			Row = row;
 			Col = col;
 			Val = val;  // If Val = 0, then cell is empty
-			Clue = false;
+			isClue = false;	// Will be updated once the solve process starts
 
 			// If the cell starts empty (Val = 0), add all numbers to notes
 			Notes = new List<int>();
@@ -69,7 +74,7 @@ namespace Sudoku_Solver
 		}
 
 		// Prints the specified cell
-		// x0 and y0 are the zero-based Console indices of the upper left-hand corner of the entire sudoku grid. 
+		// MainClass.X0 and MainClass.Y0 are the zero-based console indices of the upper left-hand corner of the entire sudoku grid. 
 		// If highlight is TRUE, the cell's background is set to cyan
 		public void Draw(bool highlight = false, bool showNotes = false, bool badCell = false)
 		{
@@ -79,9 +84,9 @@ namespace Sudoku_Solver
 
 			// Choose background colour
 			if (highlight)
-				Console.BackgroundColor = ConsoleColor.Cyan;
+				Console.BackgroundColor = HIGHLIGHT_BACKGROUND;
 			else
-				Console.BackgroundColor = ConsoleColor.Black;
+				Console.BackgroundColor = NORMAL_BACKGROUND;
 
 			// Fill background
 			for (int i = 0; i < 3; i++)
@@ -92,11 +97,11 @@ namespace Sudoku_Solver
 
 			// Choose foreground colour
 			if (badCell)
-				Console.ForegroundColor = ConsoleColor.Red;
-			else if (Clue)
-				Console.ForegroundColor = ConsoleColor.Magenta;
+				Console.ForegroundColor = BAD_FOREGROUND;
+			else if (isClue)
+				Console.ForegroundColor = CLUE_FOREGROUND;
 			else
-				Console.ForegroundColor = ConsoleColor.White;
+				Console.ForegroundColor = NORMAL_FOREGROUND;
 
 			// If cell has a value, print that in the middle. Otherwise, print all the notes
 			if (Val != 0)
@@ -110,7 +115,7 @@ namespace Sudoku_Solver
 			}
 			else if (showNotes)
 			{
-				Console.ForegroundColor = ConsoleColor.DarkGray;
+				Console.ForegroundColor = NOTE_FOREGROUND;
 				for (int n = 1; n <= 9; n++)
 				{
 					if (Notes.Contains(n))
@@ -122,7 +127,6 @@ namespace Sudoku_Solver
 				}
 			}
 
-			// Reset colours
 			Console.ResetColor();
 		}
 	}

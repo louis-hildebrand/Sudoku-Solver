@@ -181,7 +181,7 @@ namespace Sudoku_Solver
 					if (sud.Cells[i].Val != 0)
 					{
 						sud.Assign(sud.Cells[i].Row, sud.Cells[i].Col, sud.Cells[i].Val);
-						sud.Cells[i].Clue = true;
+						sud.Cells[i].isClue = true;
 					}
 				}
 
