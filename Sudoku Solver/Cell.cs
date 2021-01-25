@@ -9,7 +9,7 @@ namespace Sudoku_Solver
 		public int Col { get; }
 		public char Block { get; }
 		public int Val { get; set; }
-		public bool isClue { get; set; }
+		public bool IsClue { get; set; }
 		public List<int> Notes { get; set; }
 		private const ConsoleColor HIGHLIGHT_BACKGROUND = ConsoleColor.Cyan;
 		private const ConsoleColor NORMAL_BACKGROUND = ConsoleColor.Black;
@@ -30,7 +30,7 @@ namespace Sudoku_Solver
 			Row = row;
 			Col = col;
 			Val = val;  // If Val = 0, then cell is empty
-			isClue = false;	// Will be updated once the solve process starts
+			IsClue = false;	// Will be updated once the solve process starts
 
 			// If the cell starts empty (Val = 0), add all numbers to notes
 			Notes = new List<int>();
@@ -98,7 +98,7 @@ namespace Sudoku_Solver
 			// Choose foreground colour
 			if (badCell)
 				Console.ForegroundColor = BAD_FOREGROUND;
-			else if (isClue)
+			else if (IsClue)
 				Console.ForegroundColor = CLUE_FOREGROUND;
 			else
 				Console.ForegroundColor = NORMAL_FOREGROUND;

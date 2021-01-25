@@ -103,7 +103,7 @@ namespace Sudoku_Solver
 			for (int i = 0; i < 81; i++)
 			{
 				copiedSudoku.Cells[i].Val = this.Cells[i].Val;
-				copiedSudoku.Cells[i].isClue = this.Cells[i].isClue;
+				copiedSudoku.Cells[i].IsClue = this.Cells[i].IsClue;
 				copiedSudoku.Cells[i].Notes = new List<int>();
 
 				for (int j = 0; j < this.Cells[i].Notes.Count; j++)
