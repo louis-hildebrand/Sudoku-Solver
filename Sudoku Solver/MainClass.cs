@@ -7,7 +7,8 @@ namespace Sudoku_Solver
 	class MainClass
 	{
   		public const int X0 = 2, Y0 = 1;				// Coordinates (zero-based console indices) of the upper left-hand corner of the sudoku grid
-		public const int MSG_COL = 85, MSG_LINE = 2;	// Coordinates (zero-based console indices) on which to start writing messages for the user
+		public const int MSG_COL = 85, MSG_LINE = 2;    // Coordinates (zero-based console indices) on which to start writing messages for the user
+		public const int WIN_WIDTH = 160, WIN_HEIGHT = 45;
 		public static List<Sudoku> previousState = new List<Sudoku>();
 	  
 		public static void Main (string[] args)
@@ -15,7 +16,7 @@ namespace Sudoku_Solver
 			Console.Clear();
 			Console.CursorVisible = false;
 
-			Console.SetWindowSize(160, 45);
+			Console.SetWindowSize(WIN_WIDTH, WIN_HEIGHT);
 
 			while (true)
 			{
@@ -23,7 +24,7 @@ namespace Sudoku_Solver
 				previousState = new List<Sudoku>();
 			
 				Sudoku.DrawBlank();
-				sud.Cells[0].Draw(highlight: true);
+				sud.Cells[0].Draw(highlight: true);	// Highlight the upper left-hand cell
 
 				// Print instructions
 				Console.SetCursorPosition(MSG_COL, MSG_LINE);
@@ -139,7 +140,7 @@ namespace Sudoku_Solver
 									{
 										sud.Cells[badCells[i]].Draw(badCell: false, highlight: badCells[i] == index);
 									}
-									goto new_number;
+									goto new_number;	// Restart the check from the beginning
 								}
 							}
 						}
@@ -175,7 +176,7 @@ namespace Sudoku_Solver
 				Stopwatch watch = new Stopwatch();
 				watch.Start();
 			
-				// Update all notes
+				// Update and draw all notes
 				for (int i = 0; i < 81; i++)
 				{
 					if (sud.Cells[i].Val != 0)
@@ -183,12 +184,10 @@ namespace Sudoku_Solver
 						sud.Assign(sud.Cells[i].Row, sud.Cells[i].Col, sud.Cells[i].Val);
 						sud.Cells[i].isClue = true;
 					}
-				}
-
-				// Show notes
-				for (int i = 0; i < 81; i++)
-				{
-					sud.Cells[i].Draw(showNotes: true);
+					else
+					{
+						sud.Cells[i].Draw(showNotes: true);
+					}
 				}
 
 				// Solve sudoku
@@ -211,7 +210,7 @@ namespace Sudoku_Solver
 						Console.ForegroundColor = ConsoleColor.White;
 						break;
 					case "not advanced enough":
-						previousState.Add(sud.Copy());
+						previousState.Add(sud.DeepCopy());
 						outcome = sud.GuessAndCheck();
 					
 						switch (outcome)

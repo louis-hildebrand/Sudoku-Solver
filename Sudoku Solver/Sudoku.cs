@@ -52,7 +52,7 @@ namespace Sudoku_Solver
 				Cells[index].Draw();
 		}
 
-		// Prints a blank sudoku grid, with the upper left corner at (X0, X0)
+		// Prints a blank sudoku grid, with the upper left corner at (row, col) = (MainClass.Y0, MainClass.X0)
 		public static void DrawBlank()
 		{
 			for (int i = 0; i < 37; i++)
@@ -95,8 +95,8 @@ namespace Sudoku_Solver
 			}
 		}
 
-		// Returns a new, identical sudoku (which won't be affected if the original is changed)
-		public Sudoku Copy()
+		// Returns a deep copy of the current puzzle
+		public Sudoku DeepCopy()
 		{
 			Sudoku copiedSudoku = new Sudoku();
 
@@ -123,6 +123,7 @@ namespace Sudoku_Solver
 			do
 			{
 				progress = false;
+				// Make message flash to show that the program is running
 				numCycles++;
 				Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE);
 				if (numCycles % 2 == 1)
@@ -417,7 +418,7 @@ namespace Sudoku_Solver
 			foreach (int n in Cells[targetCellIndex].Notes)
 			{
 				// Can't reassign "this" directly, so have to update cells individually
-				Sudoku tempSud = MainClass.previousState[0].Copy();
+				Sudoku tempSud = MainClass.previousState[0].DeepCopy();
 				for (int i = 0; i < 81; i++)
 				{
 					this.Cells[i] = tempSud.Cells[i];
@@ -434,7 +435,7 @@ namespace Sudoku_Solver
 					case "filled":
 						return "filled";
 					case "not advanced enough":
-						MainClass.previousState.Insert(0, this.Copy());
+						MainClass.previousState.Insert(0, this.DeepCopy());
 						outcome = this.GuessAndCheck();
 						goto see_outcome;
 					case "unsolvable":  // Puzzle unsolvable: continue to next guess
