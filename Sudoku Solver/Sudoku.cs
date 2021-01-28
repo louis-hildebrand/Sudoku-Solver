@@ -409,18 +409,21 @@ namespace Sudoku_Solver
 
 		/*
 		 * Solves the sudoku using a combination of analytic techniques and a depth-first recursive search
-		 * Returns TRUE if the puzzle was successfully solved and FALSE if the puzzle is unsolvable
+		 * Returns a string representing the outcome:
+		 *		"analytic": the puzzle was solved using only analytic methods
+		 *		"guess": the puzzle was solved using guess-and-check
+		 *		"unsolvable": no solution exists
 		 */
-		public bool Solve()
+		public string Solve()
 		{
 			string outcome;
 
 			// First try to solve the puzzle analytically
 			outcome = this.SolveAnalytic();
 			if (outcome.Equals("filled"))
-				return true;
+				return "analytic";
 			else if (outcome.Equals("unsolvable"))
-				return false;
+				return "unsolvable";
 
 			// Guess and check 
 			// -- Find the cell with the fewest notes
@@ -444,11 +447,12 @@ namespace Sudoku_Solver
 				{
 					tempSud.Cells[i].Draw(showNotes: true);
 				}
-				if (tempSud.Solve())
-					return true;
+				outcome = tempSud.Solve();
+				if (outcome.Equals("analytic") || outcome.Equals("guess"))
+					return "guess";
 			}
 			// -- No value works: the puzzle is not solvable
-			return false;
+			return "unsolvable";
 		}
 
 		/*

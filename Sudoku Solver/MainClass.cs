@@ -191,25 +191,33 @@ namespace Sudoku_Solver
 				}
 
 				// Solve sudoku
-				bool solved = sud.Solve();
+				string outcome = sud.Solve();
+				switch (outcome)
+				{
+					case "analytic":
+						Console.ForegroundColor = ConsoleColor.Green;
+						Console.Write("The sudoku is solved!");
+						Console.ForegroundColor = ConsoleColor.White;
+						break;
+					case "guess":
+						Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE);
+						Console.ForegroundColor = ConsoleColor.Green;
+						Console.Write("One solution was found!");
+						Console.ForegroundColor = ConsoleColor.White;
+						Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
+						Console.Write("(Note): Since this solution was found by guess-and-check,");
+						Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 2);
+						Console.Write("        it is not guaranteed to be unique");
+								break;
+					case "unsolvable":
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write("The solver has found that this sudoku has no solution.");
+						Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
+						Console.Write("Please check that you've entered it correctly.");
+						Console.ForegroundColor = ConsoleColor.White;
+						break;
+				}
 
-				// Display outcome (puzzle solved / puzzle unsolvable)
-				Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE);
-				if (solved)
-				{
-					Console.ForegroundColor = ConsoleColor.Green;
-					Console.Write("The sudoku is solved!");
-					Console.ForegroundColor = ConsoleColor.White;
-				}
-				else
-				{
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("The solver has found that this sudoku has no solution.");
-					Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
-					Console.Write("Please check that you've entered it correctly.");
-					Console.ForegroundColor = ConsoleColor.White;
-				}
-			
 				// Stop timer and display elapsed time
 				watch.Stop();
 				TimeSpan ts = watch.Elapsed;
