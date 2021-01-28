@@ -439,14 +439,26 @@ namespace Sudoku_Solver
 			}
 			// -- Try all possible values
 			Sudoku tempSud;
-			foreach(int n in Cells[targetCellIndex].Notes)
+			for (int i = 0; i < minNumberNotes; i++)
 			{
+				int n = Cells[targetCellIndex].Notes[i];
 				tempSud = this.DeepCopy();
 				tempSud.Assign(Cells[targetCellIndex].Row, Cells[targetCellIndex].Col, n, draw: true);
-				for (int i = 0; i < 81; i++)
+
+				// Just draw the cell with the guess
+				if (i == 0)
 				{
-					tempSud.Cells[i].Draw(showNotes: true);
+					tempSud.Cells[targetCellIndex].Draw();
 				}
+				// Re-draw the entire board
+				else
+				{
+					for (int j = 0; j < 81; j++)
+					{
+						tempSud.Cells[j].Draw(showNotes: true);
+					}
+				}
+
 				outcome = tempSud.Solve();
 				if (outcome.Equals("analytic") || outcome.Equals("guess"))
 					return "guess";
