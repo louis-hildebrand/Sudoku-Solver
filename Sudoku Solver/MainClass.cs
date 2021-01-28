@@ -191,54 +191,23 @@ namespace Sudoku_Solver
 				}
 
 				// Solve sudoku
-				string outcome = sud.Solve();
+				bool solved = sud.Solve();
 
 				// Display outcome (puzzle solved / puzzle unsolvable)
 				Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE);
-				switch (outcome)
+				if (solved)
 				{
-					case "filled":
-						Console.ForegroundColor = ConsoleColor.Green;
-						Console.Write("The sudoku is solved!");
-						Console.ForegroundColor = ConsoleColor.White;
-						break;
-					case "unsolvable":
-						Console.ForegroundColor = ConsoleColor.Red;
-						Console.Write("The solver has found that this sudoku has no solution.");
-						Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
-						Console.Write("Please check that you've entered it correctly.");
-						Console.ForegroundColor = ConsoleColor.White;
-						break;
-					case "not advanced enough":
-						previousState.Add(sud.DeepCopy());
-						outcome = sud.GuessAndCheck();
-					
-						switch (outcome)
-						{
-							case "filled":
-								Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE);
-								Console.ForegroundColor = ConsoleColor.Green;
-								Console.Write("One solution was found!");
-								Console.ForegroundColor = ConsoleColor.White;
-								Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
-								Console.Write("(Note): Since this solution was found by guess-and-check,");
-								Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 2);
-								Console.Write("        it is not guaranteed to be unique");
-								break;
-							case "unsolvable":
-								Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE);
-								Console.ForegroundColor = ConsoleColor.Red;
-								Console.Write("The solver has found that this sudoku has no solution.");
-								Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
-								Console.Write("Please check that you've entered it correctly.");
-								Console.ForegroundColor = ConsoleColor.White;
-								break;
-							default:
-								break;
-						}
-						break;
-					default:
-						break;
+					Console.ForegroundColor = ConsoleColor.Green;
+					Console.Write("The sudoku is solved!");
+					Console.ForegroundColor = ConsoleColor.White;
+				}
+				else
+				{
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.Write("The solver has found that this sudoku has no solution.");
+					Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
+					Console.Write("Please check that you've entered it correctly.");
+					Console.ForegroundColor = ConsoleColor.White;
 				}
 			
 				// Stop timer and display elapsed time

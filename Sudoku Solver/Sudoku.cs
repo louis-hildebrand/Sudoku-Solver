@@ -115,7 +115,13 @@ namespace Sudoku_Solver
 			return copiedSudoku;
 		}
 
-		public string Solve()
+		/* Attempts to solve the puzzle using simple logic
+		 * Returns a string representing the outcome:
+		 *		"filled": the puzzle was successfully solved
+		 *		"unsolvable": the puzzle is definitely unsolvable
+		 *		"not advanced enough": a solution was not found, but may still exist
+		 */
+		public string SolveAnalytic()
 		{
 			// Loop until no further progress can be made
 			bool progress, filled = false, unsolvable = false;
@@ -401,6 +407,51 @@ namespace Sudoku_Solver
 			}
 		}
 
+		/*
+		 * Solves the sudoku using a combination of analytic techniques and a depth-first recursive search
+		 * Returns TRUE if the puzzle was successfully solved and FALSE if the puzzle is unsolvable
+		 */
+		public bool Solve()
+		{
+			string outcome;
+
+			// First try to solve the puzzle analytically
+			outcome = this.SolveAnalytic();
+			if (outcome.Equals("filled"))
+				return true;
+			else if (outcome.Equals("unsolvable"))
+				return false;
+
+			// Guess and check 
+			// -- Find the cell with the fewest notes
+			int minNumberNotes = 10;
+			int targetCellIndex = 0;
+			for (int i = 0; i < 81; i++)
+			{
+				if (Cells[i].Val == 0 && Cells[i].Notes.Count < minNumberNotes)
+				{
+					targetCellIndex = i;
+					minNumberNotes = Cells[i].Notes.Count;
+				}
+			}
+			// -- Try all possible values
+			Sudoku tempSud;
+			foreach(int n in Cells[targetCellIndex].Notes)
+			{
+				tempSud = this.DeepCopy();
+				tempSud.Assign(Cells[targetCellIndex].Row, Cells[targetCellIndex].Col, n, draw: true);
+				for (int i = 0; i < 81; i++)
+				{
+					tempSud.Cells[i].Draw(showNotes: true);
+				}
+				if (tempSud.Solve())
+					return true;
+			}
+			// -- No value works: the puzzle is not solvable
+			return false;
+		}
+
+		/*
 		public string GuessAndCheck()
 		{
 			// Find the cell with the least possible values
@@ -427,7 +478,7 @@ namespace Sudoku_Solver
 
 				this.Assign(Cells[targetCellIndex].Row, Cells[targetCellIndex].Col, n, draw: true);
 
-				string outcome = this.Solve();
+				string outcome = this.SolveAnalytic();
 
 			see_outcome:
 				switch (outcome)
@@ -442,7 +493,7 @@ namespace Sudoku_Solver
 						break;
 					default:    // Should never happen
 						Console.Clear();
-						Console.Write("The program broke: Louis is a clown");
+						Console.Write("An unexpected error occurred, please restart the program");
 						break;
 				}
 			}
@@ -450,5 +501,6 @@ namespace Sudoku_Solver
 			MainClass.previousState.RemoveAt(0);
 			return "unsolvable";
 		}
+		*/
 	}
 }
