@@ -217,6 +217,7 @@ namespace Sudoku_Solver
 								break;
 					case "unsolvable":
 						Console.ForegroundColor = ConsoleColor.Red;
+						Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE);
 						Console.Write("The solver has found that this sudoku has no solution.");
 						Console.SetCursorPosition(MainClass.MSG_COL, MainClass.MSG_LINE + 1);
 						Console.Write("Please check that you've entered it correctly.");
