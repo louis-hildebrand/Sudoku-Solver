@@ -187,11 +187,15 @@ namespace Sudoku_Solver
 				{
 					if (sud.Cells[i].Val != 0)
 					{
+						// Update all other notes
 						sud.Assign(sud.Cells[i].Row, sud.Cells[i].Col, sud.Cells[i].Val);
+						// Show that the cell is a clue
 						sud.Cells[i].IsClue = true;
+						sud.Cells[i].Draw();
 					}
 					else
 					{
+						// Show the notes
 						sud.Cells[i].Draw(showNotes: true);
 					}
 				}
