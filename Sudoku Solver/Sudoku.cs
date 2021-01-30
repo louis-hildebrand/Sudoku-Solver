@@ -115,7 +115,13 @@ namespace Sudoku_Solver
 			return copiedSudoku;
 		}
 
-		public string Solve()
+		/* Attempts to solve the puzzle using simple logic
+		 * Returns a string representing the outcome:
+		 *		"filled": the puzzle was successfully solved
+		 *		"unsolvable": the puzzle is definitely unsolvable
+		 *		"not advanced enough": a solution was not found, but may still exist
+		 */
+		public string SolveAnalytic()
 		{
 			// Loop until no further progress can be made
 			bool progress, filled = false, unsolvable = false;
@@ -401,6 +407,67 @@ namespace Sudoku_Solver
 			}
 		}
 
+		/*
+		 * Solves the sudoku using a combination of analytic techniques and a depth-first recursive search
+		 * Returns a string representing the outcome:
+		 *		"analytic": the puzzle was solved using only analytic methods
+		 *		"guess": the puzzle was solved using guess-and-check
+		 *		"unsolvable": no solution exists
+		 */
+		public string Solve()
+		{
+			string outcome;
+
+			// First try to solve the puzzle analytically
+			outcome = this.SolveAnalytic();
+			if (outcome.Equals("filled"))
+				return "analytic";
+			else if (outcome.Equals("unsolvable"))
+				return "unsolvable";
+
+			// Guess and check 
+			// -- Find the cell with the fewest notes
+			int minNumberNotes = 10;
+			int targetCellIndex = 0;
+			for (int i = 0; i < 81; i++)
+			{
+				if (Cells[i].Val == 0 && Cells[i].Notes.Count < minNumberNotes)
+				{
+					targetCellIndex = i;
+					minNumberNotes = Cells[i].Notes.Count;
+				}
+			}
+			// -- Try all possible values
+			Sudoku tempSud;
+			for (int i = 0; i < minNumberNotes; i++)
+			{
+				int n = Cells[targetCellIndex].Notes[i];
+				tempSud = this.DeepCopy();
+				tempSud.Assign(Cells[targetCellIndex].Row, Cells[targetCellIndex].Col, n, draw: true);
+
+				// Just draw the cell with the guess
+				if (i == 0)
+				{
+					tempSud.Cells[targetCellIndex].Draw();
+				}
+				// Re-draw the entire board
+				else
+				{
+					for (int j = 0; j < 81; j++)
+					{
+						tempSud.Cells[j].Draw(showNotes: true);
+					}
+				}
+
+				outcome = tempSud.Solve();
+				if (outcome.Equals("analytic") || outcome.Equals("guess"))
+					return "guess";
+			}
+			// -- No value works: the puzzle is not solvable
+			return "unsolvable";
+		}
+
+		/*
 		public string GuessAndCheck()
 		{
 			// Find the cell with the least possible values
@@ -427,7 +494,7 @@ namespace Sudoku_Solver
 
 				this.Assign(Cells[targetCellIndex].Row, Cells[targetCellIndex].Col, n, draw: true);
 
-				string outcome = this.Solve();
+				string outcome = this.SolveAnalytic();
 
 			see_outcome:
 				switch (outcome)
@@ -442,7 +509,7 @@ namespace Sudoku_Solver
 						break;
 					default:    // Should never happen
 						Console.Clear();
-						Console.Write("The program broke: Louis is a clown");
+						Console.Write("An unexpected error occurred, please restart the program");
 						break;
 				}
 			}
@@ -450,5 +517,6 @@ namespace Sudoku_Solver
 			MainClass.previousState.RemoveAt(0);
 			return "unsolvable";
 		}
+		*/
 	}
 }
