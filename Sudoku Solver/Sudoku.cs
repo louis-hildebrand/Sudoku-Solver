@@ -466,57 +466,5 @@ namespace Sudoku_Solver
 			// -- No value works: the puzzle is not solvable
 			return "unsolvable";
 		}
-
-		/*
-		public string GuessAndCheck()
-		{
-			// Find the cell with the least possible values
-			int minNumberNotes = 10;
-			int targetCellIndex = 0;
-			for (int i = 0; i < 81; i++)
-			{
-				if (Cells[i].Val == 0 && Cells[i].Notes.Count < minNumberNotes)
-				{
-					targetCellIndex = i;
-					minNumberNotes = Cells[i].Notes.Count;
-				}
-			}
-
-			foreach (int n in Cells[targetCellIndex].Notes)
-			{
-				// Can't reassign "this" directly, so have to update cells individually
-				Sudoku tempSud = MainClass.previousState[0].DeepCopy();
-				for (int i = 0; i < 81; i++)
-				{
-					this.Cells[i] = tempSud.Cells[i];
-					this.Cells[i].Draw(showNotes: true);
-				}
-
-				this.Assign(Cells[targetCellIndex].Row, Cells[targetCellIndex].Col, n, draw: true);
-
-				string outcome = this.SolveAnalytic();
-
-			see_outcome:
-				switch (outcome)
-				{
-					case "filled":
-						return "filled";
-					case "not advanced enough":
-						MainClass.previousState.Insert(0, this.DeepCopy());
-						outcome = this.GuessAndCheck();
-						goto see_outcome;
-					case "unsolvable":  // Puzzle unsolvable: continue to next guess
-						break;
-					default:    // Should never happen
-						Console.Clear();
-						Console.Write("An unexpected error occurred, please restart the program");
-						break;
-				}
-			}
-
-			MainClass.previousState.RemoveAt(0);
-			return "unsolvable";
-		}
-		*/
 	}
 }
