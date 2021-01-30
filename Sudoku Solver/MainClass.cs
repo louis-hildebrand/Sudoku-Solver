@@ -140,7 +140,13 @@ namespace Sudoku_Solver
 									{
 										sud.Cells[badCells[i]].Draw(badCell: false, highlight: badCells[i] == index);
 									}
-									goto new_number;	// Restart the check from the beginning
+									// Clear the error message
+									Console.SetCursorPosition(MSG_COL, MSG_LINE + 10);
+									Console.Write(new String(' ', 55));
+									Console.SetCursorPosition(MSG_COL, MSG_LINE + 11);
+									Console.Write(new String(' ', 42));
+									// Restart the check from the beginning
+									goto new_number;
 								}
 							}
 						}
